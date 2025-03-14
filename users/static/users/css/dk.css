@@ -1,0 +1,94 @@
+/* form đăng kí tài khoản */
+
+.form {
+    display: grid;
+    margin-top: 200px;
+    margin-left: 100px;
+    background-color: RGB(255, 237, 237);
+    border: solid 2px black;
+    border-radius: 20px;
+    padding: 20px;
+    width: 500px;
+    height: 300px;
+    position: absolute;
+    top: -42%;
+    left: -12%;
+    padding: 20px;
+
+}
+
+h1 {
+    text-align: center;
+  
+}
+
+.container {
+    background-color: RGB(255, 237, 237);
+    width: 600px;
+    height: 400px;
+    display: flex;
+    margin: auto;
+    position: relative;
+}
+
+.form-item {
+    display: flex;
+    margin: 15px;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 20px;
+    margin-right: 10px;
+    min-height: 20px;
+    flex: 1;
+}
+
+.nhap {
+    min-width: 270px;
+    height: 30px;
+    border-radius: 5px;
+    border: solid 1px black;
+    flex: 1;
+    border-radius: 30px;
+   
+}
+
+.nut {
+    border-radius: 20px;
+    min-width: 150px;
+    background-color: RGB(255, 195, 213);
+    min-height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+    margin: 15px auto;
+  
+
+}
+
+.nut,a {
+    display: block;
+    padding-top: 1px;
+    color: black;
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.dk{
+    text-decoration: none;
+}
+
+.forgot{
+    font-size: 2rem;
+}
+
+.controls{
+    color: #646c6c9c;
+}
+
+.border{
+    border-bottom: 1px solid;
+}

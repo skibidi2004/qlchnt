@@ -1,0 +1,75 @@
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký thông tin khách hàng</title>
+    <link rel="stylesheet" href="{% static 'users/css/dk.css' %}">
+</head>
+
+<body>
+    <div style="margin-top: 100px" class="container">
+        <div class="form">
+            <h1>ĐĂNG KÍ TÀI KHOẢN</h1>
+            <form id="register-form">
+                <div class="form-item">
+                    <label class="title" for="email">Email</label>
+                    <input style="padding: 0 16px;" class="nhap" type="email" name="email" id="email" required>
+                </div>
+
+                <div class="form-item">
+                    <label class="title" for="sdt">Số điện thoại</label>
+                    <input style="padding: 0 16px;" class="nhap" type="number" name="sdt" id="sdt" required>
+                </div>
+
+                <div class="form-item">
+                    <label class="title" for="mk">Mật khẩu</label>
+                    <input style="padding: 0 16px;" class="nhap" type="password" name="password1" id="mk" required>
+                </div>
+
+                <div class="form-item">
+                    <label class="title" for="confirm">Xác nhận mật khẩu</label>
+                    <input style="padding: 0 16px;" class="nhap" type="password" name="password2" id="confirm" required>
+                </div>
+
+                <div class="nut">
+                    <button id="register-btn" type="submit">Đăng ký</button>
+                </div>
+            </form>
+            <p id="message" style="color: red;"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let email = document.getElementById('email').value;
+            let sdt = document.getElementById('sdt').value;
+            let password1 = document.getElementById('mk').value;
+            let password2 = document.getElementById('confirm').value;
+
+            let response = await fetch('/users/api/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    sdt: sdt,
+                    password1: password1,
+                    password2: password2
+                })
+            });
+
+            let result = await response.json();
+            if (response.status === 201) {
+                alert('Đăng ký thành công! Chuyển đến trang Home.');
+                window.location.href = '/home/';
+            } else {
+                document.getElementById('message').innerText = result.error;
+            }
+        });
+    </script>
+</body>
+</html>
