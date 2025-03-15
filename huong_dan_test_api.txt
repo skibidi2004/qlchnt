@@ -1,0 +1,18 @@
+de vo trang register : http://127.0.0.1:8000/api/users/register-page/
+
+test tren postman :
+
+Phương thức: POST
+URL: http://127.0.0.1:8000/api/users/register/
+Headers:
+Content-Type: application/json
+
+Body (raw, JSON):
+
+{
+    "username": "newuser",
+    "email": "newuser@example.com",
+    "password": "password123",
+    "sdt": "0123456789"
+}
+

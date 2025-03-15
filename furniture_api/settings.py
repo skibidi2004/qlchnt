@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'furniture_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cuahangnoithat',  # Tên database
-        'USER': 'postgres',         # Tên người dùng PostgreSQL
-        'PASSWORD': '123', # Mật khẩu
-        'HOST': 'localhost',        # Máy chủ (localhost nếu chạy local)
-        'PORT': '5432',             # Cổng mặc định của PostgreSQL
+        'NAME': 'cuahangnoithat',
+        'USER': 'postgres',
+        'PASSWORD': '1224454',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
  
