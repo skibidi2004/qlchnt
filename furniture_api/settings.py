@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     # Django REST Framework
     'rest_framework',
     "rest_framework_simplejwt",
-     'django_extensions',
+    'django_extensions',
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cuahangnoithat',
         'USER': 'postgres',
-        'PASSWORD': '1224454',
+        'PASSWORD': '123',
         'HOST': 'localhost',
         'PORT': '5432',
     }
