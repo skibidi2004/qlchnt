@@ -46,12 +46,17 @@ INSTALLED_APPS = [
     'rest_framework',
     "rest_framework_simplejwt",
     'django_extensions',
+    'corsheaders',
 ]
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5180",  # Nếu Vue chạy ở port 5173
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'furniture_api.urls'

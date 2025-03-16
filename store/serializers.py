@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import User, Category, Product, Cart, CartItem
 from store.models import Product
 from store.models import Order 
-from store.models import OrderItem, CartItem
+from store.models import OrderItem, CartItem, ProductImage
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,13 +14,18 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
+    category = CategorySerializer(read_only=True)  # Hiển thị thông tin danh mục
+    images = ProductImageSerializer(many=True, read_only=True)  # Lấy danh sách ảnh
 
     class Meta:
         model = Product
-        fields = '__all__'
-
+        fields = ['id', 'category', 'name', 'description', 'price', 'stock', 'discount', 'created_at', 'updated_at', 'images']
 
 class CartItemSerializer(serializers.ModelSerializer):
     product_name = serializers.ReadOnlyField(source="product.name")
