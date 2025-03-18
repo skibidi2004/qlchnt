@@ -55,7 +55,7 @@ REST_FRAMEWORK = {
     ),
 }
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5180",  # Nếu Vue chạy ở port 5173
+    "http://localhost:5173",  # Nếu Vue chạy ở port 5173
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
