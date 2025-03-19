@@ -1,0 +1,14 @@
+connect database trong setting.py
+python manage.py makemigrations
+python manage.py migrate
+
+pip install django==5.1.6  # Cài đặt Django phiên bản 5.1.6 (Framework chính)
+pip install djangorestframework  # Cài đặt Django REST Framework để xây dựng API
+pip install djangorestframework-simplejwt  # Cài đặt JWT authentication cho Django REST Framework
+pip install django-extensions  # Cài đặt Django Extensions, cung cấp nhiều tiện ích hữu ích
+pip install django-cors-headers  # Cài đặt CORS Headers để hỗ trợ frontend giao tiếp với backend
+pip install psycopg2-binary  # Cài đặt driver PostgreSQL cho Django
+pip install Pillow  # Cài đặt Pillow để xử lý ảnh trong ImageField
+
+
+aaaa
