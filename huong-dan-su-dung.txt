@@ -1,7 +1,4 @@
-connect database trong setting.py
-python manage.py makemigrations
-python manage.py migrate
-
+_ Cài đặt
 pip install django==5.1.6  # Cài đặt Django phiên bản 5.1.6 (Framework chính)
 pip install djangorestframework  # Cài đặt Django REST Framework để xây dựng API
 pip install djangorestframework-simplejwt  # Cài đặt JWT authentication cho Django REST Framework
@@ -10,5 +7,32 @@ pip install django-cors-headers  # Cài đặt CORS Headers để hỗ trợ fro
 pip install psycopg2-binary  # Cài đặt driver PostgreSQL cho Django
 pip install Pillow  # Cài đặt Pillow để xử lý ảnh trong ImageField
 
+//// Nếu bị lỗi pip thì phải cài pip
+python -m ensurepip --upgrade
+python -m pip install --upgrade pip
 
-aaaa
+_connect database trong setting.py
+
+_Nếu muốn sử dụng admin
+py manage.py createsuperuser
+tên admin:
+email:
+mật khẩu:
+xác nhận mật khẩu:
+nhập: y
+Xong bước tạo tài khoản admin thì chạy
+python manage.py makemigrations
+python manage.py migrate
+
+_Xong cách bước trên thì chạy project bằng lệnh: python manage.py runserver
+
+//// Nếu bị lỗi khi cài django thì chạy bằng môi trường ảo
+_Tạo môi trường ảo
+python -m venv venv
+_Kích hoạt
+venv\Scripts\activate
+_Thoát môi trường ảo 
+deactivate
+
+
+
