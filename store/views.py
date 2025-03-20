@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import viewsets, status
 from .models import User
 from .serializers import UserSerializer
@@ -23,9 +23,45 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.db.models import Q
+from .models import Product
+from .serializers import ProductSerializer
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # Chỉ user đăng nhập mới có thể sửa / xóa
+    authentication_classes = [JWTAuthentication]  # Xác thực bằng Token JWT
+
+    @action(detail=False, methods=['get'], url_path='category/(?P<category_id>[^/.]+)')
+    def list_by_category(self, request, category_id=None):
+        """ Lấy danh sách sản phẩm theo danh mục """
+        products = Product.objects.filter(category_id=category_id)
+        serializer = self.get_serializer(products, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='search')
+    def search(self, request):
+        """ Tìm kiếm sản phẩm theo tên """
+        keyword = request.query_params.get('q', '')
+        products = Product.objects.filter(name__icontains=keyword)
+        serializer = self.get_serializer(products, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='price-range')
+    def filter_by_price(self, request):
+        """ Lọc sản phẩm theo khoảng giá """
+        min_price = request.query_params.get('min', 0)
+        max_price = request.query_params.get('max', 99999999)
+        products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+        serializer = self.get_serializer(products, many=True)
+        return Response(serializer.data)
+
 
 class ProductImageViewSet(viewsets.ModelViewSet):
     queryset = ProductImage.objects.all()

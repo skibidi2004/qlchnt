@@ -22,26 +22,27 @@ class RegisterAPI(APIView):
     def post(self, request):
         # Lấy dữ liệu từ request
         data = request.data.copy()
-        password1 = data.get('password1')
+        password = data.get('password')
         password2 = data.get('password2')
 
         # Kiểm tra mật khẩu khớp
-        if password1 != password2:
+        if password != password2:
             return Response(
                 {'error': 'Mật khẩu không khớp'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Đổi password1 thành password để serializer hiểu
-        data['password'] = password1
+        # Kiểm tra username và email đã tồn tại chưa
+        if User.objects.filter(username=data.get("username")).exists():
+            return Response({'error': 'Username đã được sử dụng'}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=data.get("email")).exists():
+            return Response({'error': 'Email đã được sử dụng'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Gửi dữ liệu vào serializer
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             try:
-                phone = data.get('sdt', None)
                 user = serializer.save()
-                if phone:
-                    user.phone = phone
-                    user.save()
                 return Response(
                     {'message': 'Đăng ký thành công', 'user': user.username},
                     status=status.HTTP_201_CREATED
