@@ -134,7 +134,7 @@ export default {
     display: grid;
     margin-top: 200px;
     margin-left: 100px;
-    background-color: RGB(255, 237, 237);
+    background-color: RGB(231, 218, 202);
     border: solid 2px black;
     border-radius: 20px;
     padding: 20px;
@@ -153,7 +153,7 @@ h1 {
 }
 
 .container {
-    background-color: RGB(255, 237, 237);
+    background-color: RGB(231, 218, 202);
     width: 600px;
     height: 400px;
     position: relative;
@@ -186,6 +186,7 @@ h1 {
     border: solid 1px black;
     flex: 1;
     border-radius: 30px;
+    padding: 0 16px;
   
     
 }
@@ -213,11 +214,16 @@ h1 {
 }
 
 button.gui {
+   
+
     padding: 8px 16px;
     border-radius: 5px;
-    background-color: RGB(255, 195, 213);
-    border: 1px solid RGB(255, 195, 213);
+    background-color: RGB(167, 110, 67);
+    border: 1px solid RGB(167, 110, 67);
     margin-top: 5px;
+    display: flex;
+    color: white;
+    margin: 0 auto;
 }
 
 

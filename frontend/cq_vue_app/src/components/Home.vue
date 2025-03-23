@@ -242,16 +242,18 @@
   <button @click="buyProduct">Mua ngay</button>
 </div>
 </template>  
+
 <script>
-import axios from "axios";
-import { ref } from "vue";
+
+import { ref, onMounted } from "vue";
 
 const images = import.meta.glob('@/assets/IMG/*.jpg', { eager: true });
 const imageList = Object.values(images).map(img => img.default);
 
 export default {
   setup() {
-    const currentSlide = ref(0);
+    const currentSlide = ref(1);
+    const totalSlides = ref(2);
     const products = ref([]);
     const loading = ref(true);
     const error = ref(null);
@@ -268,7 +270,7 @@ export default {
     };
 
     const toggleSlide = () => {
-      currentSlide.value = (currentSlide.value + 1) % imageList.length;
+      currentSlide.value = (currentSlide.value % totalSlides.value) + 1;
     };
 
     const buyProduct = () => {
@@ -281,11 +283,18 @@ export default {
       }
     };
 
-    fetchProducts();
-    return { currentSlide, toggleSlide, buyProduct, imageList, products, loading, error, fetchProducts };
+    onMounted(() => {
+      fetchProducts();
+      setTimeout(() => {
+        currentSlide.value = 2;
+      }, 5000);
+    });
+
+    return { currentSlide, totalSlides, toggleSlide, buyProduct, imageList, products, loading, error };
   }
 };
 </script>
+
 
 
 
