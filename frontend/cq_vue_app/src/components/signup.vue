@@ -186,6 +186,7 @@ h1 {
     border: solid 1px black;
     flex: 1;
     border-radius: 30px;
+    padding: 0 16px;
   
     
 }
