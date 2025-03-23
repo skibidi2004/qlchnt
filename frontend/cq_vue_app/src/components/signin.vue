@@ -170,11 +170,14 @@ border-radius: 5px;
 }
 
 button.gui {
-    padding: 8px 16px;
+  padding: 8px 16px;
     border-radius: 5px;
-    background-color: RGB(255, 195, 213);
-    border: 1px solid RGB(255, 195, 213);
+    background-color: RGB(167, 110, 67);
+    border: 1px solid RGB(167, 110, 67);
     margin-top: 5px;
+    display: flex;
+    margin: 0 auto;
+    
 }
 
 

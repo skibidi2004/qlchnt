@@ -344,7 +344,27 @@
       };
   
       return { currentSlide, toggleSlide, buyProduct, imageList, products };
+    },
+    data() {
+    return {
+      currentSlide: 1, // Bắt đầu từ slide 1
+      totalSlides: 2   // Có tổng cộng 2 slide
+    };
+  },
+  mounted() {
+    // Chuyển tự động sang slide 2 sau 5 giây
+    setTimeout(() => {
+      this.currentSlide = 2;
+    }, 5000);
+  },
+  methods: {
+    nextSlide() {
+      console.log("Before Click:", this.currentSlide);
+      this.currentSlide = this.currentSlide === 1 ? 2 : 1;
+      console.log("After Click:", this.currentSlide);
     }
+  }
+    
   };
   </script>
 
