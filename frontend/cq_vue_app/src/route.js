@@ -8,6 +8,7 @@ import contact from './components/contact.vue';
 import Blog from './components/Blog.vue';
 import shop_cart from './components/shop_cart.vue';
 
+
 // cấu hinh 2 router
 const routes = [
 

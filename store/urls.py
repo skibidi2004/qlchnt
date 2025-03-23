@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import UserViewSet, CategoryViewSet, ProductViewSet, ProductImageViewSet
 from .views import CartViewSet, CartItemViewSet
 from store.views import OrderViewSet
-
+from django.conf.urls.static import static
+from django.conf import settings
 router = DefaultRouter()
 router.register(r'store-users', UserViewSet, basename='store-user')
 router.register(r'categories', CategoryViewSet, basename='cate')

@@ -1,479 +1,162 @@
 <template>
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <div class="wrapper">
-    <header class="menu-toggle" >
-    <!-- Mobile menu button -->
-   
-        <div class="navbar" >
-            <div class="navbar-link" >
-                <ul class="navbar-link-item"  :class="{ 'active': isOpen }">
-                    <li class="item-link"> <a class="link" href="/"> Trang chủ</a></li>
-                    <li class="item-link"> <a class="link" href="Product">Sản phẩm</a> </li>
-                    <li class="item-link"> <a class="link" href="Blog"> About</a></li>
-                    <li class="item-link"> <a class="link" href="contact">Liên hệ</a> </li>
-                </ul>
-            </div>
-            <div class="navbar-logo">
-                <img class="logo" src="@/assets/IMG/logo1.jpg" alt="logo">
-            </div>
-            <div class="navbar-search">
-                <input type="text" class="search-input" placeholder="Tìm kiếm">
-                <div class="icon-search">
-                    <a class="link" href=""><i class="fa-solid fa-magnifying-glass"></i></a>
-                </div>
-            </div>
-            <div class="navbar-cart-login-icon">
-                <a style="font-size: 2rem;" href=""> <i  class="fa-solid fa-bag-shopping"></i></a>
-                <a style="font-size: 2rem; padding-bottom: 10px;" href="signin"><i  class="fa-solid fa-user"></i></a>
+  <div class="product-list">
+    <h1 class="title">Danh Sách Sản Phẩm</h1>
+    <div class="filters">
+      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." @input="fetchProducts" />
+      <select v-model="selectedCategory" @change="fetchProducts">
+        <option value="">Tất cả danh mục</option>
+        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+      </select>
+      <input type="number" v-model="minPrice" placeholder="Giá tối thiểu" @input="fetchProducts" />
+      <input type="number" v-model="maxPrice" placeholder="Giá tối đa" @input="fetchProducts" />
+    </div>
 
-
-            </div>
+    <div v-if="loading">Đang tải sản phẩm...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else class="products-container">
+      <div v-for="product in products" :key="product.id" class="product-card" @click="goToProductDetail(product.id)">
+        <img class="product-image" :src="getProductImage(product)" :alt="product.name" />
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <p class="price">{{ formatPrice(product.price) }}</p>
+          <p>Đã bán: {{ product.sold }}</p>
         </div>
-        <div class="hamburger" @click="toggleMenu">☰</div>
-   
-</header>
-</div>
-  <!-- product -->
-  <div class="product">
-            <p style="font-size: 2.5rem; margin: 0" class="title-product">Gợi ý cho bạn</p>
-            <div class="product-item-contaner">
-                <a href="/detail">
-                    <div class="product-item">
-                        <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                            <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                                <div class="evaluate">
-                                    <ul class="evaluate_star" >
-                                        <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                        <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                        <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                        <li> <i class="fa-solid fa-star"></i></li>
-                                        <li> <i class="fa-solid fa-star"></i></li>
-                                    </ul>
-                                    <ul class="buy">
-                                        <li>Đã bán 45</li>
-                                    </ul>
-                                    
-                                </div> 
-                        </div>
-                    </div>
-                 </a>
-                 <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bn.jpg" alt="Hình 1">
-                    <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                        <div class="evaluate">
-                            <ul class="evaluate_star" >
-                                <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                <li> <i class="fa-solid fa-star"></i></li>
-                                <li> <i class="fa-solid fa-star"></i></li>
-                            </ul>
-                            <ul class="buy">
-                                <li>Đã bán 45</li>
-                            </ul>
-                            
-                        </div> 
-                </div>
-                </div>
-                </a>
-                <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                <a href="/detail">
-                
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bàn.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-
-
-                <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-               </a>
-               <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bn.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                <a href="/detail">
-                
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bàn.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                
-            </div>
-          </div>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
-const images = import.meta.glob('@/assets/IMG/*.jpg', { eager: true });
+import axios from "axios";
 
-// Chuyển danh sách import thành một mảng đường dẫn ảnh
-const imageList = Object.values(images).map(img => img.default);
+export default {
+  data() {
+    return {
+      products: [],
+      categories: [],
+      searchQuery: "",
+      selectedCategory: "",
+      minPrice: "",
+      maxPrice: "",
+      loading: true,
+      error: null,
+    };
+  },
+  methods: {
+    async fetchProducts() {
+      this.loading = true;
+      try {
+        const params = {
+          category: this.selectedCategory,
+          search: this.searchQuery,
+          min_price: this.minPrice,
+          max_price: this.maxPrice,
+        };
+        const response = await axios.get("http://127.0.0.1:8000/api/products/", { params });
+        this.products = response.data;
+      } catch (err) {
+        this.error = "Lỗi khi tải sản phẩm!";
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchCategories() {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/categories/");
+        this.categories = response.data;
+      } catch (err) {
+        console.error("Lỗi khi tải danh mục sản phẩm", err);
+      }
+    },
+    getProductImage(product) {
+  if (product && product.images && product.images.length > 0) {
+    let imageUrl = product.images[0].image_url; // Lấy image_url từ object đầu tiên trong mảng images
+    console.log("Raw Image URL:", imageUrl);
 
-console.log(imageList); // Kiểm tra danh sách ảnh được import
+    if (typeof imageUrl === "string" && imageUrl.trim() !== "") {
+      // Thay đổi đường dẫn để sử dụng /product_images/ thay vì /media/
+      imageUrl = imageUrl.replace("/media/product_images/", "/product_images/");
+      const baseUrl = "http://127.0.0.1:8000";
+      imageUrl = baseUrl + imageUrl;
+
+      console.log("Processed Image URL:", imageUrl);
+      return imageUrl;
+    }
+  }
+  console.log("Ảnh mặc định được sử dụng.");
+  return "/default-image.jpg"; // Nếu không có ảnh, dùng ảnh mặc định
+},
+
+    goToProductDetail(productId) {
+      this.$router.push(`/products/${productId}`);
+    },
+    formatPrice(price) {
+      return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
+    },
+  },
+  created() {
+    this.fetchProducts();
+    this.fetchCategories();
+  },
+};
 </script>
+
+
 <style>
-main{
-    padding-top: 50px;
-}   
-
-
-
-@media screen and (max-width: 800px) 
-{
-
-    .navbar-search{
-        display: none !important;
-    }
-    .search-input{
-        display: none;
-    }
-    .navbar-cart-login-icon{
-        display: none !important;
-    }
-    .navbar-logo{
-
-        display: none;
-    }
-
-    main{
-    padding-top: 200px;
-  }
-  .navbar-link {
-   
-   
-    background-color: var(--color-primary);
-    width: 100% !important;; /* Chiều rộng 100% */
-    /* padding-top: 30px; */
-    position: fixed; /* Tuyệt đối */
-    top: 20px; /* Cách top 50px */
-    left: 0; /* Cách trái 0px */
-    right: 0;
-    flex-wrap: wrap;
-  }
-  .navbar-link-item {
-    flex-direction: column;
-    align-items: center; /* Căn giữa nội dung */
-   
-  }
-   
-  .navbar-link-item.active {
-     display: flex;
-    
-    }
-
- 
+.product-list {
+  padding: 1rem;
 }
 
-
-
-.banner {
-  margin-top: 20px;
-}
-.slider {
-  position: relative;
-  max-width: 100%;
-  overflow: hidden;
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
+  background-color: rgb(234, 206, 172);
+  padding: 0.5rem;
 }
 
-.slides img {
-  width: 100%;
-  transition: opacity 0.5s ease-in-out;
-}
-
-.button-container {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 24px;
-  color: black;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 10px;
-  border-radius: 50%;
-}
-
-
-*{
-   
-   /* padding: 0; */
-   box-sizing: border-box;
- 
-}
-
-
-body{
-   background-color: RGB(243, 238, 234);
-}
-:root{
-   /* màu nâu */
-   --color-primary: RGB(138, 99, 68);
-
-
-   --background-color: RGB(216, 206, 199);
-}
-
-
-/* header */
-.navbar{
-   width: 100%;
-   height:50px;
-   background-color: var(--color-primary);
-   display: flex;
-   align-items: center;
-   font-size: 1.75rem;
-   border-radius: 10px;
-   position: fixed;  /* Cố định menu trên cùng */
-    top: 0;           /* Gán vị trí trên cùng */
-    left: 0;
-    width: 100%;      /* Kéo dài toàn bộ chiều rộng */
-    z-index: 1000;  /* Đặt lớp z-index cao nhất */
-   
-  
-
-}
-
-
-
-
-.navbar-link-item{
-   display: flex;
-   justify-content: space-between;
-   margin: 0 ;
-   font-size: 1.5rem;
-
-
-}
-
-
-.item-link{
-   list-style: none;
-   margin: 0 20px;
-
-
-}
-.link{
-   text-decoration: none;
-   color: rgb(37, 36, 36);
-   font-size: 1.5rem;
-
-
-}
-
-
-.logo{
-   width: 175px;
-   height: 38px;
-   margin-right: 40px;
-}
-
-
-.navbar-search{
-
-
+.filters {
   display: flex;
-  background-color: white;;
-  border-radius: 15px;
-  outline-color: white;
-  width: 35rem;
-
-
-}
-.search-input{
-   border-style: none;
-   border-radius: 15px;
-   padding: 0 10px;
-   width: 30rem;
-}
-.icon-search{
-   border-left: 2px solid #3333;
-   padding: 3px 20px;
-   width: 5rem;
-   
-   
-}
-.navbar-cart-login-icon{
-   margin: 1rem;
-   margin: 1rem;
-    display: flex;
-    align-items: center;
-
-
-
-}
-.fa-bag-shopping{
-   margin: 1rem;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* product */
-
-.product {
-   margin-top: 70px;
-   
+.filters input, .filters select {
+  padding: 0.5rem;
+  font-size: 1rem;
 }
 
-
-.title-product{
-   margin-bottom: 0;
-   background-color: rgb(234, 206, 172);
-   padding: 0.5rem;
-   
-
-
-}
-.img-product{
-   width: 20rem;
-   height: 18rem;
- 
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
 }
 
-
-.product-item{
-   margin-top: 30px;
-   padding: 5px;
+.product-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  width: 20rem;
+  text-align: center;
+  cursor: pointer;
 }
 
-
-.product-item-contaner{
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: space-around;
-  
-
-
+.product-image {
+  width: 100%;
+  height: auto;
 }
 
-
-.evaluate{
-   display: flex;
-   justify-content: space-between;
-   padding: 0 10px;
+.product-info h3 {
+  margin: 0.5rem 0;
 }
 
-
-.buy{
-   display: flex;
-   list-style: none;
-   font-size: 1.1rem;
-}
-.evaluate_star{
-   display: flex;
-   list-style: none;
-   padding: 0;
+.price {
+  color: red;
+  font-weight: bold;
 }
 
-
-.float{
-   padding: 10px;
-   margin: 0;
-   font-size: 1.3rem;
-}
-.cost{
-   
-   background-color: rgb(239, 226, 209);
-
-
+.error {
+  color: red;
+  text-align: center;
 }
 </style>

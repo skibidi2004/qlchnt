@@ -136,6 +136,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Ví dụ: bạn muốn tất cả ảnh được truy cập qua /product_images/...
+
+
+MEDIA_URL = '/product_images/'  # Đổi từ '/media/' thành '/product_images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'product_images')  # Đường dẫn lưu file ảnh
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

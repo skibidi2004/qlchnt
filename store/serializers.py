@@ -15,13 +15,20 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    def get_image_url(self, obj):
+        if obj.image:
+            return obj.image.url.replace('/product_images/product_images/', '/product_images/')  # Fix lỗi lặp
+        return None
+
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'product', 'image_url']
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)  # Hiển thị thông tin danh mục
-    images = ProductImageSerializer(many=True, read_only=True)  # Lấy danh sách ảnh
+    category = CategorySerializer(read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
