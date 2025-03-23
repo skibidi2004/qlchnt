@@ -9,22 +9,22 @@
                 </div>
                 <div class="form-item">
                     <label class="title" for="email">Email</label>
-                    <input v-model="form.email" class="nhap" type="text" id="email">
+                    <input v-model="form.email" class="nhap" type="email" id="email">
                 </div>
                 <div class="form-item">
                     <label class="title" for="phone">Số điện thoại</label>
-                    <input v-model="form.sdt" class="nhap" type="text" id="sdt">
+                    <input v-model="form.phone" class="nhap" type="text" id="phone">
                 </div>
                 <div class="form-item">
                     <label class="title" for="password">Mật khẩu</label>
-                    <input v-model="form.password1" class="nhap" type="password" id="password">
+                    <input v-model="form.password" class="nhap" type="password" id="password">
                 </div>
                 <div class="form-item">
-                    <label class="title" for="confirm">Xác nhận mật khẩu</label>
-                    <input v-model="form.password2" class="nhap" type="password2" id="password2">
+                    <label class="title" for="password2">Xác nhận mật khẩu</label>
+                    <input v-model="form.password2" class="nhap" type="password" id="password2">
                 </div>
                 <div class="nut">
-                    <button type="submit" class="gui">Đăng ký</button>
+                    <button class="gui">Đăng ký</button>
                 </div>
                 <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
             </form>
@@ -33,38 +33,47 @@
 </template>
 
 <script>
-        import axios from "axios";
+import axios from "axios";
 
-        export default {
-            name: "Signup",
-            data() {
-                return {
-                    form: {
-                        email: "",
-                        phone: "",
-                        password: "",
-                        password2: ""
-                    },
-                    errorMessage: "",
-                };
+export default {
+    name: "Signup",
+    data() {
+        return {
+            form: {
+                username: "",  
+                email: "",
+                phone: "",
+                password: "",
+                password2: ""
             },
-            methods: {
-                async signup() {
+            errorMessage: "",
+        };
+    },
+    methods: {
+        async signup() {
+            // Kiểm tra mật khẩu nhập lại có trùng không
+            if (this.form.password !== this.form.password2) {
+                this.errorMessage = "Mật khẩu không khớp!";
+                return;
+            }
+
+            // Kiểm tra các trường không được để trống
+            if (!this.form.email || !this.form.password || !this.form.password2 || !this.form.phone) {
+                this.errorMessage = "Vui lòng nhập đầy đủ thông tin!";
+                return;
+            }
+
             try {
                 const csrfToken = this.getCookie("csrftoken");
 
-                // Chuyển đổi dữ liệu: tạo username từ email và đổi password1 thành password
-                const userData = {
-                    username: this.form.email.split("@")[0],  // ví dụ: nếu email là "hien@gmail.com", username = "hien"
-                    email: this.form.email,
-                    phone: this.form.phone,
-                    password: this.form.password1,
-                    password2: this.form.password2
-                };
+                // Nếu username rỗng, tự động tạo từ email
+                if (!this.form.username) {
+                    this.form.username = this.form.email.split("@")[0];
+                }
 
                 const response = await axios.post(
                     "http://127.0.0.1:8000/api/users/register/",
-                    userData,
+                    this.form,
                     {
                         headers: {
                             "X-CSRFToken": csrfToken,
@@ -74,8 +83,16 @@
                 );
 
                 if (response.status === 201) {
-                    alert("Đăng ký thành công! Hãy đăng nhập.");
-                    this.$router.push("/signin");
+                    alert("Đăng ký thành công! Hệ thống sẽ tự động đăng nhập.");
+
+                    // Lưu token vào localStorage nếu có
+                    if (response.data.access) {
+                        localStorage.setItem("access_token", response.data.access);
+                        localStorage.setItem("refresh_token", response.data.refresh);
+                    }
+
+                    // Chuyển hướng sang trang chủ hoặc đăng nhập
+                    this.$router.push("/");
                 }
             } catch (error) {
                 console.error(error.response);
@@ -100,8 +117,6 @@
     }
 };
 </script>
-
-
 
 <style>
 

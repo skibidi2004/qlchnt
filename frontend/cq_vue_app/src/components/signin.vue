@@ -1,65 +1,77 @@
 <template>
     <div style="height: 375px" class="container-sig">
-
-<div   class="form-sig">
-    <form @submit.prevent="signup" action="" method="POST" >
-        <h1>THÔNG TIN ĐĂNG NHẬP</h1>
-        <div class="input">
-            <div class="form-item-sig">
-            
-                <label 
-             class="title-sig" for="username">Tên đăng nhập</label>
-            <input v-model="form.name" style="  padding: 0 16px;" class="nhap" type="text" name="email" id="username" >
-            </div>
-            <div class="form-item">
-            
-                <label   class="title-sig" for="password">Mật khẩu</label>
-                <input v-models="form.name"  style="  padding: 0 16px;"  class="nhap" type="password" name="password" id="password" >
-            </div>
+        <div class="form-sig">
+            <form @submit.prevent="login">
+                <h1>THÔNG TIN ĐĂNG NHẬP</h1>
+                <div class="input">
+                    <div class="form-item-sig">
+                        <label class="title-sig" for="username">Tên đăng nhập</label>
+                        <input v-model="form.username" class="nhap" type="text" id="username">
+                    </div>
+                    <div class="form-item">
+                        <label class="title-sig" for="password">Mật khẩu</label>
+                        <input v-model="form.password" class="nhap" type="password" id="password">
+                    </div>
+                </div>
+                <div class="controls" style="margin-top: 20px;">
+                    <button class="gui">Đăng nhập</button>
+                </div>
+                <div v-if="errorMessage" style="color: red; text-align: center; margin-top: 10px;">
+                    {{ errorMessage }}
+                </div>
+                <div class="forgot">
+                    <a style="color: #807373; text-decoration: underline; font-size: 1rem;" href="#">Quên mật khẩu</a>
+                </div>
+            </form>
         </div>
-        <div  style="margin-top: 20px;" class="controls">
-            <div @click="signin()" style="margin-bottom: 4px; "  class="nut" >
-                <button style=" 
-                padding: 8px 16px;
-                border-radius: 5px;
-                background-color: RGB(167, 110, 67);
-                border: 1px solid RGB(167, 110, 67);
-                 display: flex; 
-                margin: auto;
-                margin-top: 5px;
-                font-size: 1rem;
-                color: white;
-                  
-                 " class="gui" type="submit">Đăng nhập</button>
-            </div>
-            <div   class="forgot"> <a style="color: #807373; text-decoration: underline; padding-bottom: 1px;  font-size: 1rem;                                             
-                " href=""
-                >Quên mật khẩu</a></div>
-        </div>
-        
-    </form>
-
-</div>
-</div>
+    </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    name: 'signin',
-    data() {
-        return {
-            form: {
-                name: '',
-                password: ''
-            }
+  name: "Signin",
+  data() {
+    return {
+      form: {
+        username: "",
+        password: "",
+      },
+      errorMessage: "",
+    };
+  },
+  mounted() {
+    console.log("Reset form khi vào trang đăng nhập...");
+    this.form.username = "";
+    this.form.password = "";
+    localStorage.removeItem("access_token");
+  },
+  methods: {
+    async login() {
+      console.log("Bắt đầu đăng nhập...");
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/api/users/login/", this.form);
+        if (response.status === 200) {
+          alert("Đăng nhập thành công!");
+          localStorage.setItem("access_token", response.data.access);
+
+          // Reset form sau khi đăng nhập
+          this.form.username = "";
+          this.form.password = "";
+
+          this.$router.push("/");
         }
+      } catch (error) {
+        this.errorMessage = "Sai tài khoản hoặc mật khẩu!";
+      }
     },
-    methods: {
-       signin() {
-           console.log(this.form);
-       }
+    logout() {
+      localStorage.removeItem("access_token");
+      this.$router.push("/signin");
     }
-} 
+  },
+};
 </script>
 
 <style>

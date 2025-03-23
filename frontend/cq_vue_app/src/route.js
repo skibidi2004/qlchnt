@@ -17,7 +17,7 @@ const routes = [
         component: Home,
         path: '/',
     },
-
+    
     // cấu hình router cho trang đăng ký - signin
     {
         name: 'signin',

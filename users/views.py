@@ -43,8 +43,21 @@ class RegisterAPI(APIView):
         if serializer.is_valid():
             try:
                 user = serializer.save()
+                 # **Tạo token JWT cho user**
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+
                 return Response(
-                    {'message': 'Đăng ký thành công', 'user': user.username},
+                     {
+                        'message': 'Đăng ký thành công',
+                        'user': {
+                            'id': user.id,
+                            'username': user.username,
+                            'email': user.email
+                        },
+                        'refresh': str(refresh),
+                        'access': access_token  # **Trả về access token**
+                    },
                     status=status.HTTP_201_CREATED
                 )
             except Exception as e:
