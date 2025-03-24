@@ -72,15 +72,21 @@ export default {
       }
     },
     getProductImage(product) {
-      if (product && product.images && product.images.length > 0) {
-        let imageUrl = product.images[0].image_url;
-        if (typeof imageUrl === "string" && imageUrl.trim() !== "") {
-          imageUrl = imageUrl.replace("/media/product_images/", "/product_images/");
-          return "http://127.0.0.1:8000" + imageUrl;
-        }
-      }
-      return "/default-image.jpg"; // Ảnh mặc định nếu không có ảnh
-    },
+  if (product && product.images && product.images.length > 0) {
+    let imageUrl = product.images[0].image_url;
+
+    // Kiểm tra nếu đường dẫn đã đúng format thì giữ nguyên
+    if (imageUrl.startsWith("http")) {
+      return imageUrl;
+    }
+
+    // Chuẩn hóa đường dẫn nếu Django trả về URL tương đối
+    return `http://127.0.0.1:8000/product_images/${imageUrl.split('/').pop()}`;
+  }
+
+  return "/default-image.jpg"; // Ảnh mặc định nếu không có ảnh
+},
+
     goToProductDetail(productId) {
       this.$router.push(`/products/${productId}`);
     },

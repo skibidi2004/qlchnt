@@ -18,9 +18,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
 
     def get_image_url(self, obj):
-        if obj.image:
-            return obj.image.url.replace('/product_images/product_images/', '/product_images/')  # Fix lỗi lặp
-        return None
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.image.url)
 
     class Meta:
         model = ProductImage
@@ -72,26 +71,23 @@ class OrderSerializer(serializers.ModelSerializer):
 class CheckoutSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['request'].user
-        cart = Cart.objects.filter(user=user).first()
+        cart_items = CartItem.objects.filter(cart__user=user)
 
-        if not cart or not cart.items.exists():
+        if not cart_items.exists():
             raise serializers.ValidationError("Giỏ hàng trống!")
 
-        order = Order.objects.create(
-            user=user,
-            total_price=cart.total_price()
-        )
-
+        order = Order.objects.create(user=user)
         order_items = []
-        for item in cart.items.all():
+
+        for item in cart_items:
             order_items.append(OrderItem(
                 order=order,
                 product=item.product,
                 quantity=item.quantity,
                 price=item.product.price
             ))
-
+        
         OrderItem.objects.bulk_create(order_items)
-        cart.delete()  # Xoá giỏ hàng sau khi đặt hàng
+        cart_items.delete()  # Xóa giỏ hàng sau khi đặt hàng
 
         return order
