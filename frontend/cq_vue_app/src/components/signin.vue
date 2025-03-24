@@ -54,7 +54,10 @@ export default {
         const response = await axios.post("http://127.0.0.1:8000/api/users/login/", this.form);
         if (response.status === 200) {
           alert("Đăng nhập thành công!");
+           // Lưu token vào localStorage
           localStorage.setItem("access_token", response.data.access);
+           // Lưu thông tin user vào localStorage
+           localStorage.setItem("user", JSON.stringify(response.data.user));
 
           // Reset form sau khi đăng nhập
           this.form.username = "";

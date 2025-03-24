@@ -21,9 +21,23 @@
               </div>
           </div>
           <div class="navbar-cart-login-icon">
-              <a style="font-size: 2rem;" href=""> <i  class="fa-solid fa-bag-shopping"></i></a>
-              <a style="font-size: 2rem; padding-bottom: 10px;" href="signin"><i  class="fa-solid fa-user"></i></a>
-          </div>
+    <a style="font-size: 2rem;" href="#"> 
+        <i class="fa-solid fa-bag-shopping"></i>
+    </a>
+    
+    <div v-if="user" class="user-info">
+        <span>Xin chào, {{ user.username }}</span>
+        <a style="font-size: 2rem; padding-bottom: 10px; cursor: pointer;" @click="logout">
+            <i class="fa-solid fa-user"></i>
+        </a>
+    </div>
+    
+    <a v-else style="font-size: 2rem; padding-bottom: 10px;" href="signin">
+        <i class="fa-solid fa-user"></i>
+    </a>
+</div>
+
+
       </div>
       <div class="hamburger" @click="toggleMenu">☰</div>
   </header>
@@ -244,11 +258,11 @@
 </template>  
 
 <script>
-
 import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const images = import.meta.glob('@/assets/IMG/*.jpg', { eager: true });
-const imageList = Object.values(images).map(img => img.default);
+const images = import.meta.glob("@/assets/IMG/*.jpg", { eager: true });
+const imageList = Object.values(images).map((img) => img.default);
 
 export default {
   setup() {
@@ -257,7 +271,25 @@ export default {
     const products = ref([]);
     const loading = ref(true);
     const error = ref(null);
+    const user = ref(null);
 
+    // Lấy thông tin user từ localStorage
+    const loadUser = () => {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        user.value = JSON.parse(userData);
+      }
+    };
+
+    // Đăng xuất
+    const logout = () => {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      user.value = null;
+      window.location.href = "/signin";
+    };
+
+    // Lấy danh sách sản phẩm từ API
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/products/");
@@ -269,10 +301,12 @@ export default {
       }
     };
 
+    // Chuyển đổi slide
     const toggleSlide = () => {
       currentSlide.value = (currentSlide.value % totalSlides.value) + 1;
     };
 
+    // Xử lý khi nhấn "Mua Ngay"
     const buyProduct = () => {
       const token = localStorage.getItem("access_token");
       if (!token) {
@@ -285,14 +319,27 @@ export default {
 
     onMounted(() => {
       fetchProducts();
+      loadUser();
       setTimeout(() => {
         currentSlide.value = 2;
       }, 5000);
     });
 
-    return { currentSlide, totalSlides, toggleSlide, buyProduct, imageList, products, loading, error };
-  }
+    return {
+      currentSlide,
+      totalSlides,
+      toggleSlide,
+      buyProduct,
+      imageList,
+      products,
+      loading,
+      error,
+      user,
+      logout,
+    };
+  },
 };
+
 </script>
 
 
