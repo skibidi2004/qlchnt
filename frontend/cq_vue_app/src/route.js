@@ -8,6 +8,8 @@ import contact from './components/contact.vue';
 import Blog from './components/Blog.vue';
 import shop_cart from './components/shop_cart.vue';
 
+import CartView from "@/components/CartView.vue";
+
 
 // cấu hinh 2 router
 const routes = [
@@ -57,9 +59,9 @@ const routes = [
         name: 'shop_cart',
         component: shop_cart,
         path: '/shop_cart',
-    }
+    },
 
-   
+    { path: "/cart", name: "Cart", component: CartView },
 ];
 
 // tạo router   

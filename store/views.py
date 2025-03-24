@@ -94,12 +94,31 @@ class CartViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 class CartItemViewSet(viewsets.ModelViewSet):
     serializer_class = CartItemSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user)
+
+    @action(detail=True, methods=["patch"])
+    def update_quantity(self, request, pk=None):
+        cart_item = self.get_object()
+        quantity = request.data.get("quantity")
+
+        if quantity and int(quantity) > 0:
+            cart_item.quantity = int(quantity)
+            cart_item.save()
+            return Response({"message": "Cập nhật số lượng thành công", "quantity": cart_item.quantity})
+        return Response({"error": "Số lượng không hợp lệ"}, status=400)
+    @action(detail=True, methods=["delete"])
+    def remove_item(self, request, pk=None):
+        cart_item = self.get_object()
+        cart_item.delete()
+        return Response({"message": "Xóa sản phẩm khỏi giỏ hàng thành công"}, status=204)
     
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

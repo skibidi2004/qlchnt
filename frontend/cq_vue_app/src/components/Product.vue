@@ -14,18 +14,20 @@
     <div v-if="loading">Đang tải sản phẩm...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else class="products-container">
-      <div v-for="product in products" :key="product.id" class="product-card" @click="goToProductDetail(product.id)">
-        <img class="product-image" :src="getProductImage(product)" :alt="product.name" />
+      <div v-for="product in products" :key="product.id" class="product-card">
+        <img class="product-image" :src="getProductImage(product)" :alt="product.name" @click="goToProductDetail(product.id)" />
         <div class="product-info">
-          <h3>{{ product.name }}</h3>
+          <h3 @click="goToProductDetail(product.id)">{{ product.name }}</h3>
           <p class="price">{{ formatPrice(product.price) }}</p>
           <p>Đã bán: {{ product.sold }}</p>
+          <button class="cart-button" @click.stop="addToCart(product)">
+            🛒 Thêm vào giỏ
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 
@@ -40,6 +42,7 @@ export default {
       maxPrice: "",
       loading: true,
       error: null,
+      cart: [], // Lưu trữ giỏ hàng
     };
   },
   methods: {
@@ -69,39 +72,43 @@ export default {
       }
     },
     getProductImage(product) {
-  if (product && product.images && product.images.length > 0) {
-    let imageUrl = product.images[0].image_url; // Lấy image_url từ object đầu tiên trong mảng images
-    console.log("Raw Image URL:", imageUrl);
-
-    if (typeof imageUrl === "string" && imageUrl.trim() !== "") {
-      // Thay đổi đường dẫn để sử dụng /product_images/ thay vì /media/
-      imageUrl = imageUrl.replace("/media/product_images/", "/product_images/");
-      const baseUrl = "http://127.0.0.1:8000";
-      imageUrl = baseUrl + imageUrl;
-
-      console.log("Processed Image URL:", imageUrl);
-      return imageUrl;
-    }
-  }
-  console.log("Ảnh mặc định được sử dụng.");
-  return "/default-image.jpg"; // Nếu không có ảnh, dùng ảnh mặc định
-},
-
+      if (product && product.images && product.images.length > 0) {
+        let imageUrl = product.images[0].image_url;
+        if (typeof imageUrl === "string" && imageUrl.trim() !== "") {
+          imageUrl = imageUrl.replace("/media/product_images/", "/product_images/");
+          return "http://127.0.0.1:8000" + imageUrl;
+        }
+      }
+      return "/default-image.jpg"; // Ảnh mặc định nếu không có ảnh
+    },
     goToProductDetail(productId) {
       this.$router.push(`/products/${productId}`);
     },
     formatPrice(price) {
       return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
     },
+    addToCart(product) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let existingItem = cart.find((item) => item.id === product.id);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      this.cart = cart;
+      alert("Đã thêm vào giỏ hàng!");
+    },
   },
   created() {
     this.fetchProducts();
     this.fetchCategories();
+    this.cart = JSON.parse(localStorage.getItem("cart")) || [];
   },
 };
 </script>
-
-
 <style>
 .product-list {
   padding: 1rem;
@@ -139,6 +146,7 @@ export default {
   width: 20rem;
   text-align: center;
   cursor: pointer;
+  position: relative;
 }
 
 .product-image {
@@ -158,5 +166,20 @@ export default {
 .error {
   color: red;
   text-align: center;
+}
+
+.cart-button {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.cart-button:hover {
+  background-color: #ff4500;
 }
 </style>

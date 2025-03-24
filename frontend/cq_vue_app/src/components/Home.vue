@@ -21,7 +21,7 @@
               </div>
           </div>
           <div class="navbar-cart-login-icon">
-    <a style="font-size: 2rem;" href="#"> 
+    <a style="font-size: 2rem;" href="/cart"> 
         <i class="fa-solid fa-bag-shopping"></i>
     </a>
     

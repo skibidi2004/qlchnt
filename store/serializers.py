@@ -43,10 +43,14 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
+    total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ["id", "user", "created_at", "items"]
+        fields = ["id", "user", "created_at", "items", "total_price"]
+
+    def get_total_price(self, obj):
+        return obj.total_price()
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,23 +72,26 @@ class OrderSerializer(serializers.ModelSerializer):
 class CheckoutSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['request'].user
-        cart_items = CartItem.objects.filter(cart__user=user)
+        cart = Cart.objects.filter(user=user).first()
 
-        if not cart_items.exists():
+        if not cart or not cart.items.exists():
             raise serializers.ValidationError("Giỏ hàng trống!")
 
-        order = Order.objects.create(user=user)
-        order_items = []
+        order = Order.objects.create(
+            user=user,
+            total_price=cart.total_price()
+        )
 
-        for item in cart_items:
+        order_items = []
+        for item in cart.items.all():
             order_items.append(OrderItem(
                 order=order,
                 product=item.product,
                 quantity=item.quantity,
                 price=item.product.price
             ))
-        
+
         OrderItem.objects.bulk_create(order_items)
-        cart_items.delete()  # Xóa giỏ hàng sau khi đặt hàng
+        cart.delete()  # Xoá giỏ hàng sau khi đặt hàng
 
         return order
