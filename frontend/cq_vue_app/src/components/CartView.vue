@@ -4,7 +4,7 @@
   
       <div v-if="cart.length === 0" class="empty-cart">
         <p>Giỏ hàng của bạn đang trống!</p>
-        <router-link to="/products" class="back-to-shop">🛍️ Tiếp tục mua sắm</router-link>
+        <router-link to="/Product" class="back-to-shop">🛍️ Tiếp tục mua sắm</router-link>
       </div>
   
       <div v-else>
@@ -58,11 +58,13 @@
     },
     methods: {
       getProductImage(product) {
-        if (product.images && product.images.length > 0) {
-          return `http://127.0.0.1:8000${product.images[0].image_url}`;
-        }
-        return "/default-image.jpg"; // Ảnh mặc định nếu không có ảnh
-      },
+      if (product && product.images && product.images.length > 0) {
+        let imageUrl = product.images[0].image_url;
+        return imageUrl.startsWith("http") ? imageUrl : `http://127.0.0.1:8000/product_images/${imageUrl.split('/').pop()}`;
+      }
+      return "/default-image.jpg";
+    },
+
       formatPrice(price) {
         return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
       },
