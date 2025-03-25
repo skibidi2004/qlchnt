@@ -1,6 +1,54 @@
 <template>
+
+<div class="wrapper">
+    <header class="menu-toggle" >
+    <!-- Mobile menu button -->
+   
+        <div class="navbar" >
+            <div class="navbar-link" >
+                <ul class="navbar-link-item"  :class="{ 'active': isOpen }">
+                    <li class="item-link"> <a class="link" href="/"> Trang chủ</a></li>
+                    <li class="item-link"> <a class="link" href="Product">Sản phẩm</a> </li>
+                    <li class="item-link"> <a class="link" href="Blog"> About</a></li>
+                    <li class="item-link"> <a class="link" href="contact">Liên hệ</a> </li>
+                </ul>
+            </div>
+            <div class="navbar-logo">
+                <img class="logo" src="@/assets/IMG/logo1.jpg" alt="logo">
+            </div>
+            <div class="navbar-search">
+                <input type="text" class="search-input" placeholder="Tìm kiếm">
+                <div class="icon-search">
+                    <a class="link" href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+                </div>
+            </div>
+            <div class="navbar-cart-login-icon">
+              <a style="font-size: 2rem;" href="/cart"> 
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+            
+            <div v-if="user" class="user-info">
+              
+                <a class="user-hello" style="font-size: 2rem;  cursor: pointer;" @click="logout">
+                    <i style="margin-top: 40px" class="fa-solid fa-user"></i>
+                    <span style="font-size: 1rem; display: inline-flex;"> Xin chào, {{ user.username }} </span>
+                  
+                </a>  
+            </div>
+            <a v-else style="font-size: 2rem; padding-bottom: 10px;" href="signin">
+                <i class="fa-solid fa-user"></i>
+            </a>
+
+            </div>
+        </div>
+        <div class="hamburger" @click="toggleMenu">☰</div>
+   
+</header>
+</div>
+
+<!-- product -->
   <div class="product-list">
-    <h1 class="title">Danh Sách Sản Phẩm</h1>
+    <h1 class="title-product">Danh Sách Sản Phẩm</h1>
     <div class="filters">
       <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." @input="fetchProducts" />
       <select v-model="selectedCategory" @change="fetchProducts">
@@ -17,12 +65,16 @@
       <div v-for="product in products" :key="product.id" class="product-card">
         <img class="product-image" :src="getProductImage(product)" :alt="product.name" @click="goToProductDetail(product.id)" />
         <div class="product-info">
-          <h3 @click="goToProductDetail(product.id)">{{ product.name }}</h3>
-          <p class="price">{{ formatPrice(product.price) }}</p>
-          <p>Đã bán: {{ product.sold }}</p>
-          <button class="cart-button" @click.stop="addToCart(product)">
-            🛒 Thêm vào giỏ
-          </button>
+              <h3 style="line-height: none" @click="goToProductDetail(product.id)">{{ product.name }}</h3>
+          
+              <p class="price">{{ formatPrice(product.price) }}</p>
+              
+               <p class="bought"><i>Đã bán: {{ product.sold }}</i></p>
+              
+               <button class="cart-button" @click.stop="addToCart(product)">
+                    🛒 Thêm vào giỏ
+               </button>
+            
         </div>
       </div>
     </div>
@@ -116,15 +168,39 @@ export default {
 };
 </script>
 <style>
+.bought{
+  margin-top: 0.5rem;
+}
 .product-list {
   padding: 1rem;
+  position: relative;
+  top: 8rem;
+}
+.product-info{
+  background-color: RGB(239, 226, 209);
+  padding: 12px 0;
+}
+.pack{
+  /* display: inline-flex;
+  justify-content: space-between;
+  max-width: 100%; */
 }
 
-.title {
+.title-product {
+  
+
   text-align: center;
-  margin-bottom: 1rem;
-  background-color: rgb(234, 206, 172);
-  padding: 0.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    /* background-color: rgb(234, 206, 172); */
+    padding: 0.5rem;
+    margin-top: 30px;
+    position: absolute;
+    top: -7rem;
+    display: block;
+    width: 100%;
+  
 }
 
 .filters {
@@ -156,12 +232,16 @@ export default {
 }
 
 .product-image {
-  width: 100%;
-  height: auto;
+  width: 18rem;
+  height: 19rem;
+  
 }
 
 .product-info h3 {
-  margin: 0.5rem 0;
+  margin: 0;
+    padding: 6px;
+    font-size: 1.4rem;
+    font-weight: 500;
 }
 
 .price {
@@ -183,6 +263,55 @@ export default {
   cursor: pointer;
   font-weight: bold;
   border-radius: 5px;
+}
+
+@media screen and (max-width: 800px) 
+{
+
+    .navbar-search{
+        display: none !important;
+    }
+    .search-input{
+        display: none;
+    }
+    .navbar-cart-login-icon{
+        display: none !important;
+    }
+    .navbar-logo{
+
+        display: none;
+    }
+    .product-list{
+      margin-top: 120px;
+    }
+
+    main{
+    padding-top: 200px;
+  }
+  .navbar-link {
+   
+   
+    background-color: var(--color-primary);
+    width: 100% !important;; /* Chiều rộng 100% */
+    /* padding-top: 30px; */
+    position: fixed; /* Tuyệt đối */
+    top: 20px; /* Cách top 50px */
+    left: 0; /* Cách trái 0px */
+    right: 0;
+    flex-wrap: wrap;
+  }
+  .navbar-link-item {
+    flex-direction: column;
+    align-items: center; /* Căn giữa nội dung */
+   
+  }
+   
+  .navbar-link-item.active {
+     display: flex;
+    
+    }
+
+ 
 }
 
 .cart-button:hover {

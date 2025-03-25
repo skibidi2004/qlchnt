@@ -1,6 +1,49 @@
 <template>
+
+<header class="menu-toggle" >
+      <div class="navbar" >
+          <div class="navbar-link" >
+              <ul class="navbar-link-item"  :class="{ 'active': isOpen }">
+                  <li class="item-link"> <a class="link" href="/"> Trang chủ</a></li>
+                  <li class="item-link"> <a class="link" href="Product">Sản phẩm</a> </li>
+                  <li class="item-link"> <a class="link" href="Blog"> About</a></li>
+                  <li class="item-link"> <a class="link" href="contact">Liên hệ</a> </li>
+              </ul>
+          </div>
+          <div class="navbar-logo">
+              <img class="logo" src="@/assets/IMG/logo1.jpg" alt="logo">
+          </div>
+          <div class="navbar-search">
+              <input type="text" class="search-input" placeholder="Tìm kiếm">
+              <div class="icon-search">
+                  <a class="link" href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+              </div>
+          </div>
+          <div class="navbar-cart-login-icon">
+            <a style="font-size: 2rem;" href="/cart"> 
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+            
+            <div v-if="user" class="user-info">
+              
+                <a class="user-hello" style="font-size: 2rem;  cursor: pointer;" @click="logout">
+                    <i style="margin-top: 40px" class="fa-solid fa-user"></i>
+                    <span style="font-size: 1rem; display: inline-flex;margin-left: -20px;"> Xin chào, {{ user.username }} </span>
+                  
+                </a>  
+            </div>
+            <a v-else style="font-size: 2rem; padding-bottom: 10px;" href="signin">
+                <i class="fa-solid fa-user"></i>
+            </a>
+          </div>
+
+
+
+      </div>
+      <div class="hamburger" @click="toggleMenu">☰</div>
+  </header>
     <div class="cart-container">
-      <h1>🛒 Giỏ Hàng Của Bạn</h1>
+      <h1 style="padding-bottom: 1.5rem;">🛒 Giỏ Hàng Của Bạn</h1>
   
       <div v-if="cart.length === 0" class="empty-cart">
         <p>Giỏ hàng của bạn đang trống!</p>
@@ -20,14 +63,14 @@
           </thead>
           <tbody>
             <tr v-for="item in cart" :key="item.id">
-              <td class="cart-item">
+              <td style="display: flex ;flex-direction: column;" class="cart-item">
                 <img :src="getProductImage(item)" alt="Product image" class="cart-image">
                 <span>{{ item.name }}</span>
               </td>
               <td>{{ formatPrice(item.price) }}</td>
               <td>
                 <button @click="updateQuantity(item, -1)">➖</button>
-                <span>{{ item.quantity }}</span>
+                <span style="margin: 0 10px">{{ item.quantity }}</span>
                 <button @click="updateQuantity(item, 1)">➕</button>
               </td>
               <td>{{ formatPrice(item.price * item.quantity) }}</td>
@@ -107,12 +150,13 @@
     border-collapse: collapse;
   }
   .cart-table th, .cart-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 2px solid #dddd;
+    padding: 10px 20px;
   }
   .cart-image {
-    width: 50px;
-    height: auto;
+    width: 100px;
+    height: 80px;
+    margin: 0 auto;
   }
   .cart-total {
     margin-top: 20px;
@@ -125,6 +169,8 @@
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
+    margin-top: 1.5rem;
+    border-radius: 8px;
   }
   .empty-cart {
     font-size: 1.2rem;

@@ -13,15 +13,18 @@
                         <input v-model="form.password" class="nhap" type="password" id="password">
                     </div>
                 </div>
+                <div style="display: flex; justify-content: space-between; padding: 0 28px" class="forgot">
+                    <a style="color: #807373; text-decoration: underline; font-size: 1rem;" href="#">Quên mật khẩu</a>
+                    <a style="color: #807373; text-decoration: underline; font-size: 1rem;" href="signup">Đăng kí tài khoản</a>
+
+                </div>
                 <div class="controls" style="margin-top: 20px;">
-                    <button class="gui">Đăng nhập</button>
+                    <button style="margin-bottom: 0.8rem;" class="gui">Đăng nhập</button>
                 </div>
                 <div v-if="errorMessage" style="color: red; text-align: center; margin-top: 10px;">
                     {{ errorMessage }}
                 </div>
-                <div class="forgot">
-                    <a style="color: #807373; text-decoration: underline; font-size: 1rem;" href="#">Quên mật khẩu</a>
-                </div>
+              
             </form>
         </div>
     </div>
@@ -164,10 +167,10 @@ border-radius: 5px;
 }
 
 .forgot,a {
-    display: block;
+    display: flex;
     padding-top: 1px;
     color: black;
-    text-align: center;  
+   justify-content: space-around; 
     font-size: 1rem;
    
 }

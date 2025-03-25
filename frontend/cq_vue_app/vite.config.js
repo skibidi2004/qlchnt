@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   // server: {
-  //   port: 3000, // Thay bằng cổng khác như 3000, 8080
+  //   port: 5173, // Thay bằng cổng khác như 3000, 8080
   //   strictPort: true // Nếu port đang dùng, không thử tiếp
   // }
 })
