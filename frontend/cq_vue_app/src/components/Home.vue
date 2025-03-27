@@ -1,51 +1,63 @@
 <template>
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <div class="wrapper">
-    <header class="menu-toggle" >
-    <!-- Mobile menu button -->
-   
-        <div class="navbar" >
-            <div class="navbar-link" >
-                <ul class="navbar-link-item"  :class="{ 'active': isOpen }">
-                    <li class="item-link"> <a class="link" href="/"> Trang chủ</a></li>
-                    <li class="item-link"> <a class="link" href="Product">Sản phẩm</a> </li>
-                    <li class="item-link"> <a class="link" href="Blog"> About</a></li>
-                    <li class="item-link"> <a class="link" href="contact">Liên hệ</a> </li>
-                </ul>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <div class="wrapper">
+  <header class="menu-toggle" >
+      <div class="navbar" >
+          <div class="navbar-link" >
+              <ul class="navbar-link-item"  :class="{ 'active': isOpen }">
+                  <li class="item-link"> <a class="link" href="/"> Trang chủ</a></li>
+                  <li class="item-link"> <a class="link" href="Product">Sản phẩm</a> </li>
+                  <li class="item-link"> <a class="link" href="Blog"> About</a></li>
+                  <li class="item-link"> <a class="link" href="contact">Liên hệ</a> </li>
+              </ul>
+          </div>
+          <div class="navbar-logo">
+              <img class="logo" src="@/assets/IMG/logo1.jpg" alt="logo">
+          </div>
+          <div class="navbar-search">
+              <input type="text" class="search-input" placeholder="Tìm kiếm">
+              <div class="icon-search">
+                  <a class="link" href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+              </div>
+          </div>
+          <div class="navbar-cart-login-icon">
+            <a style="font-size: 2rem;" href="/cart"> 
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+            
+            <div v-if="user" class="user-info">
+              
+                <a class="user-hello" style="font-size: 2rem;  cursor: pointer;" @click="logout">
+                    <i style="margin-top: 40px" class="fa-solid fa-user"></i>
+                    <span style="font-size: 1rem; display: inline-flex;margin-left: -20px;"> Xin chào, {{ user.username }} </span>
+                  
+                </a>  
             </div>
-            <div class="navbar-logo">
-                <img class="logo" src="@/assets/IMG/logo1.jpg" alt="logo">
-            </div>
-            <div class="navbar-search">
-                <input type="text" class="search-input" placeholder="Tìm kiếm">
-                <div class="icon-search">
-                    <a class="link" href=""><i class="fa-solid fa-magnifying-glass"></i></a>
-                </div>
-            </div>
-            <div class="navbar-cart-login-icon">
-                <a style="font-size: 2rem;" href=""> <i  class="fa-solid fa-bag-shopping"></i></a>
-                <a style="font-size: 2rem; padding-bottom: 10px;" href="signin"><i  class="fa-solid fa-user"></i></a>
+            <a v-else style="font-size: 2rem; padding-bottom: 10px;" href="signin">
+                <i class="fa-solid fa-user"></i>
+            </a>
+          </div>
 
 
-            </div>
-        </div>
-        <div class="hamburger" @click="toggleMenu">☰</div>
-   
-</header>
+
+      </div>
+      <div class="hamburger" @click="toggleMenu">☰</div>
+  </header>
 </div>
 <main>
 
+  <!-- banner -->
 <div class="banner">
     <section class="slider">
-        <div class="slides">
-            <img v-show="currentSlide === 1" class="banner-1" src="@/assets/IMG/bann1.jpg" alt="Hình 1">
-            <img v-show="currentSlide === 2" class="banner-2" src="@/assets/IMG/bann2-1.jpg" alt="Hình 2">
-        </div>
-        <div class="button-container">
-            <i @click="toggleSlide" class="fa-solid fa-arrow-right"></i>
-        </div>
-     </section> 
-</div>
+      <div class="slides">
+        <img v-show="currentSlide === 1" class="banner-1" src="@/assets/IMG/bann1.jpg" alt="Hình 1">
+        <img v-show="currentSlide === 2" class="banner-2" src="@/assets/IMG/bann2-1.jpg" alt="Hình 2">
+      </div>
+      <div class="button-container">
+        <i @click="nextSlide" class="fa-solid fa-arrow-right"></i>
+      </div>
+    </section> 
+  </div>
 
 <div style="margin-bottom: 25px;" class="demo-product">
                 <div class="demo-product">
@@ -67,283 +79,230 @@
 </div>
 
   <!-- product -->
-  <div class="product">
-            <p style="font-size: 2.5rem; margin: 0" class="title-product">Gợi ý cho bạn</p>
-            <div class="product-item-contaner">
-                <a href="/detail">
-                    <div class="product-item">
-                        <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                            <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                                <div class="evaluate">
-                                    <ul class="evaluate_star" >
-                                        <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                        <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                        <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                        <li> <i class="fa-solid fa-star"></i></li>
-                                        <li> <i class="fa-solid fa-star"></i></li>
-                                    </ul>
-                                    <ul class="buy">
-                                        <li>Đã bán 45</li>
-                                    </ul>
-                                    
-                                </div> 
-                        </div>
-                    </div>
-                 </a>
-                 <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bn.jpg" alt="Hình 1">
-                    <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                        <div class="evaluate">
-                            <ul class="evaluate_star" >
-                                <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                <li> <i class="fa-solid fa-star"></i></li>
-                                <li> <i class="fa-solid fa-star"></i></li>
-                            </ul>
-                            <ul class="buy">
-                                <li>Đã bán 45</li>
-                            </ul>
-                            
-                        </div> 
-                </div>
-                </div>
-                </a>
-                <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                <a href="/detail">
-                
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bàn.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-
-
-                <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-               </a>
-               <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/ban-an.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                <a href="/detail">
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bn.jpg" alt="Hình 1">
-                     <div class="cost"> <p class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                <a href="/detail">
-                
-                <div class="product-item">
-                    <img class="img-product" src="@/assets/IMG/bàn.jpg" alt="Hình 1">
-                     <div class="cost"> <p  class="float" >Giường ngủ cao cấp<br><span style="color: red; padding-top: 15px">8200000</span></p>
-                            <div class="evaluate">
-                                <ul class="evaluate_star" >
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i style="color:yellow" class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                    <li> <i class="fa-solid fa-star"></i></li>
-                                </ul>
-                                <ul class="buy">
-                                    <li>Đã bán 45</li>
-                                </ul>
-                                
-                            </div> 
-                    </div>
-                </div>
-                </a>
-                
-            </div>
+<div class="product">
+  <p class="title-product">Gợi ý cho bạn</p>
+  <div v-if="loading">Đang tải sản phẩm...</div>
+  <div v-else-if="error" class="error">{{ error }}</div>
+  <div v-else class="product-item-container">
+    <div v-for="product in products" :key="product.id" class="product-item">
+      <a :href="'/detail/' + product.id">
+        <img class="img-product" :src="product.image" :alt="product.name" />
+        <div class="cost">
+          <p class="float">{{ product.name }}<br>
+            <span style="color: red;">{{ formatPrice(product.price) }}</span>
+          </p>
+          <div class="evaluate">
+            <ul class="evaluate_star">
+              <li v-for="star in 5" :key="star">
+                <i :class="{'fa-solid fa-star': star <= product.rating, 'fa-regular fa-star': star > product.rating}" style="color: yellow;"></i>
+              </li>
+            </ul>
+            <ul class="buy">
+              <li>Đã bán {{ product.sold }}</li>
+                              </ul>
+                              
+                          </div> 
+                  </div>
+      </a>
+    </div>
+              
+              
+             
+              
           </div>
-         
-    <footer>
-        <div class="container-footer">
-            <p class="title-footer">Vì sao nên chọn Moda Casa</p>
-
-            <div >
-                <div class="feature-footer" >
-                    
-                            <div class="feature-footer-item">
-                                <i class="icon-feature fa-solid fa-truck-fast"></i>
-                                <p class="text-feature">Giao hàng và lắp đặt miễn phí</p>
-                            </div>
-                        
-                            <div class="feature-footer-item">
-                                <i class="icon-feature fa-solid fa-arrows-rotate"></i>
-                                <p class="text-feature">30 ngày đổi trả miễn phí</p>
-                            </div>
-                       
-                            <div class="feature-footer-item">
-                                <i class="icon-feature fa-solid fa-headphones"></i>
-                                <p class="text-feature">Tư vấn thiết kế miễn phí</p>
-                            </div>
-                        
-                           
-                            <div class="feature-footer-item">
-                                <i class="icon-feature fa-solid fa-circle-check"></i>
-                                <p class="text-feature">Thương hiệu uy tín toàn cầu</p>
-                            </div>
-                     
-                </div>
-           </div>
         </div>
+       
+  <footer>
+      <div class="container-footer">
+          <p class="title-footer">Vì sao nên chọn Moda Casa</p>
+
+          <div >
+              <div class="feature-footer" >
+                  
+                          <div class="feature-footer-item">
+                              <i class="icon-feature fa-solid fa-truck-fast"></i>
+                              <p class="text-feature">Giao hàng và lắp đặt miễn phí</p>
+                          </div>
+                      
+                          <div class="feature-footer-item">
+                              <i class="icon-feature fa-solid fa-arrows-rotate"></i>
+                              <p class="text-feature">30 ngày đổi trả miễn phí</p>
+                          </div>
+                     
+                          <div class="feature-footer-item">
+                              <i class="icon-feature fa-solid fa-headphones"></i>
+                              <p class="text-feature">Tư vấn thiết kế miễn phí</p>
+                          </div>
+                      
+                         
+                          <div class="feature-footer-item">
+                              <i class="icon-feature fa-solid fa-circle-check"></i>
+                              <p class="text-feature">Thương hiệu uy tín toàn cầu</p>
+                          </div>
+                   
+              </div>
+         </div>
+      </div>
 
 
-        <div class="blog-footer">
-                <div style="padding-left: 1.7rem;" class="side sidebar1">
-                    <p class="header-feature"> Moda Casa</p>
-                    <p style="   line-height: 30px;
-                                padding-top: 1rem;
-                                    " class="text-header-feature">
-                Nội thất Moda Casa là thương hiệu đến từ Việt Nam với hơn 20 năm kinh nghiệm trong việc sản xuất và xuất khẩu nội thất đạt chuẩn quốc tế</p>
-                </div>
-                <div class="side sidebar2">
-                    <p style="    padding-left: 1rem;" class="header-feature">Dịch vụ</p>
-                    <ul style="line-height: 30px;
-                                padding-top: 1rem;
-                                " class="text-header-feature">
-                        <li>Chính sách bán hàng</li>
-                        <li>Chính sách giao hàng & lắp đặt</li>
-                        <li>Chính sách bảo hàng & bảo trì</li>
-                        <li>Chính sách đổi trả</li>
-                    </ul>
-                </div>
-                <div class="side sidebar3">
-                    <p style="padding-left: 2rem;" class="header-feature">Thông tin liên hệ</p>
-                    <ul class="text-header-feature">
-                        <li class="text-header-feature-item">
-                            <i  class="icon-item fa-solid fa-location-dot"></i>
-                            <p>Địa chỉ: 140 đường Nguyễn Hữu Thọ, quận 7, TP.HCM</p>
-                        </li>
-                        <li class="text-header-feature-item">
-                            <i  class="icon-item fa-solid fa-phone-volume"></i>
-                            <p>0878786523</p>
-                        </li>
-                        <li class="text-header-feature-item">
-                            <i  class="icon-item fa-regular fa-envelope"></i>
-                            <p>cskh@gmail.vn</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-         
- </footer>
+      <div class="blog-footer">
+              <div style="padding-left: 1.7rem;" class="side sidebar1">
+                  <p class="header-feature"> Moda Casa</p>
+                  <p style="   line-height: 30px;
+                              padding-top: 1rem;
+                                  " class="text-header-feature">
+              Nội thất Moda Casa là thương hiệu đến từ Việt Nam với hơn 20 năm kinh nghiệm trong việc sản xuất và xuất khẩu nội thất đạt chuẩn quốc tế</p>
+              </div>
+              <div class="side sidebar2">
+                  <p style="    padding-left: 1rem;" class="header-feature">Dịch vụ</p>
+                  <ul style="line-height: 30px;
+                              padding-top: 1rem;
+                              " class="text-header-feature">
+                      <li>Chính sách bán hàng</li>
+                      <li>Chính sách giao hàng & lắp đặt</li>
+                      <li>Chính sách bảo hàng & bảo trì</li>
+                      <li>Chính sách đổi trả</li>
+                  </ul>
+              </div>
+              <div class="side sidebar3">
+                  <p style="padding-left: 2rem;" class="header-feature">Thông tin liên hệ</p>
+                  <ul class="text-header-feature">
+                      <li class="text-header-feature-item">
+                          <i  class="icon-item fa-solid fa-location-dot"></i>
+                          <p>Địa chỉ: 140 đường Nguyễn Hữu Thọ, quận 7, TP.HCM</p>
+                      </li>
+                      <li class="text-header-feature-item">
+                          <i  class="icon-item fa-solid fa-phone-volume"></i>
+                          <p>0878786523</p>
+                      </li>
+                      <li class="text-header-feature-item">
+                          <i  class="icon-item fa-regular fa-envelope"></i>
+                          <p>cskh@gmail.vn</p>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+       
+</footer>
 </main> 
-</template>
+<div>
+  <button @click="buyProduct">Mua ngay</button>
+</div>
+</template>  
 
 <script>
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-
-import {createApp, ref } from "vue";
+const images = import.meta.glob("@/assets/IMG/*.jpg", { eager: true });
+const imageList = Object.values(images).map((img) => img.default);
 
 export default {
   setup() {
     const currentSlide = ref(1);
+    const totalSlides = ref(2);
+    const products = ref([]);
+    const loading = ref(true);
+    const error = ref(null);
+    const user = ref(null);
 
-    const toggleSlide = () => {
-      currentSlide.value = currentSlide.value === 1 ? 2 : 1;
+    // Lấy thông tin user từ localStorage
+    const loadUser = () => {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        user.value = JSON.parse(userData);
+      }
     };
-    return { currentSlide, toggleSlide };
-}    
+
+    // Đăng xuất
+    const logout = () => {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      user.value = null;
+      window.location.href = "/signin";
+    };
+
+    // Lấy danh sách sản phẩm từ API
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/products/");
+        products.value = response.data;
+      } catch (err) {
+        error.value = "Lỗi khi tải sản phẩm!";
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    // Chuyển đổi slide
+    const toggleSlide = () => {
+      currentSlide.value = (currentSlide.value % totalSlides.value) + 1;
+    };
+
+    // Xử lý khi nhấn "Mua Ngay"
+    const buyProduct = () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("Bạn cần đăng nhập trước khi mua hàng!");
+        window.location.href = "/signin";
+      } else {
+        alert("Mua hàng thành công!");
+      }
+    };
+
+    onMounted(() => {
+      fetchProducts();
+      loadUser();
+      setTimeout(() => {
+        currentSlide.value = 2;
+      }, 5000);
+    });
+
+    return {
+      currentSlide,
+      totalSlides,
+      toggleSlide,
+      buyProduct,
+      imageList,
+      products,
+      loading,
+      error,
+      user,
+      logout,
+    };
+  },
+  data() {
+    return {
+      currentSlide: 1, // Bắt đầu từ slide 1
+      totalSlides: 2   // Có tổng cộng 2 slide
+    };
+  },
+  mounted() {
+    // Chuyển tự động sang slide 2 sau 5 giây
+    setTimeout(() => {
+      this.currentSlide = 2;
+    }, 5000);
+  },
+  methods: {
+    nextSlide() {
+      console.log("Before Click:", this.currentSlide);
+      this.currentSlide = this.currentSlide === 1 ? 2 : 1;
+      console.log("After Click:", this.currentSlide);
+    }
   }
-  
-
-const images = import.meta.glob('@/assets/IMG/*.jpg', { eager: true });
-
-// Chuyển danh sách import thành một mảng đường dẫn ảnh
-const imageList = Object.values(images).map(img => img.default);
-
-console.log(imageList); // Kiểm tra danh sách ảnh được import
-
-
-// import '@/assets/fonts/fontawesome-free-6.7.2-web/css/all.min.css'; // Import file css của fontawesome
-
+};
 
 </script>
 
+
+
+
+
 <style>
+.user-hello{
+  display: inline;
+
+}
 main{
     padding-top: 50px;
 }   
@@ -476,7 +435,9 @@ body{
 
 
 }
-
+.user-info{
+  margin-top: 20px;
+}
 
 .item-link{
    list-style: none;
@@ -488,6 +449,7 @@ body{
    text-decoration: none;
    color: rgb(37, 36, 36);
    font-size: 1.5rem;
+   white-space: nowrap;
 
 
 }

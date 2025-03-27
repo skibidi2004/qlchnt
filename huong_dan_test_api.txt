@@ -16,3 +16,9 @@ Body (raw, JSON):
     "sdt": "0123456789"
 }
 
+Hành động	HTTP Method	URL
+Lấy danh sách	GET	/api/products/
+Lấy chi tiết sản phẩm	GET	/api/products/{id}/
+Thêm sản phẩm	POST	/api/products/
+Cập nhật sản phẩm	PUT / PATCH	/api/products/{id}/
+Xóa sản phẩm	DELETE	/api/products/{id}/

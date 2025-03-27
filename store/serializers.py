@@ -15,13 +15,19 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.image.url)
+
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'product', 'image_url']
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)  # Hiển thị thông tin danh mục
-    images = ProductImageSerializer(many=True, read_only=True)  # Lấy danh sách ảnh
+    category = CategorySerializer(read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -36,10 +42,14 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
+    total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ["id", "user", "created_at", "items"]
+        fields = ["id", "user", "created_at", "items", "total_price"]
+
+    def get_total_price(self, obj):
+        return obj.total_price()
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:

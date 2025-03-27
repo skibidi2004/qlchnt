@@ -1,103 +1,122 @@
 <template>
     <div class="container">
-
-<div class="form">
-    <form action="" method="POST">
-        <h1>ĐĂNG KÍ TÀI KHOẢN</h1>
-        <div class="form-item">
-          
-            <label  class="title" for="username">Email</label>
-            <input v-models="form.email"  style="  padding: 0 16px;"  class="nhap" type="text" name="email" id="username" >
+        <div class="form">
+            <form @submit.prevent="signup">
+                <h1>ĐĂNG KÍ TÀI KHOẢN</h1>
+                <div class="form-item">
+                    <label class="title" for="username">Tên</label>
+                    <input v-model="form.username" class="nhap" type="text" id="username">
+                </div>
+                <div class="form-item">
+                    <label class="title" for="email">Email</label>
+                    <input v-model="form.email" class="nhap" type="email" id="email">
+                </div>
+                <div class="form-item">
+                    <label class="title" for="phone">Số điện thoại</label>
+                    <input v-model="form.phone" class="nhap" type="text" id="phone">
+                </div>
+                <div class="form-item">
+                    <label class="title" for="password">Mật khẩu</label>
+                    <input v-model="form.password" class="nhap" type="password" id="password">
+                </div>
+                <div class="form-item">
+                    <label class="title" for="password2">Xác nhận mật khẩu</label>
+                    <input v-model="form.password2" class="nhap" type="password" id="password2">
+                </div>
+                <div class="nut">
+                    <button class="gui">Đăng ký</button>
+                </div>
+                <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+            </form>
         </div>
-        <div class="form-item">
-          
-            <label class="title" for="sdt">Số điện thoai</label>
-           <input v-models="form.sdt"  style="  padding: 0 16px;"  class="nhap" type="number" name="sdt" id="sdt">
-        </div>
-
-        <div class="form-item">
-            
-            <label class="title" for="mk">Mật khẩu</label>
-            <input v-models="form.mk"  style="  padding: 0 16px;"  class="nhap" type="password" name="mk" id="mlk" >
-        </div>
-        <div class="form-item">
-         
-            <label  class="title" for="confirm">Xác nhận mật khẩu</label>
-            <input v-models="form.confirm"  style="  padding: 0 16px;"  class="nhap" type="password" name="confirm" id="confirm" >
-        </div>
-       
-
-        <div  style="margin-bottom: 4px; "  class="nut" >
-            <button @click="signup()" style=" 
-            padding: 10px 25px;
-            border-radius: 5px;
-            background-color: RGB(255, 195, 213);
-            border: 1px solid RGB(255, 195, 213);
-             display: flex; 
-            margin: auto;
-            margin-top: 5px;
-            font-size: 1rem;
-             
-            color: rgb(66, 63, 63);
-             " class="gui" type="submit">Đăng ký</button>
-        </div>
-       
-    </form>
-
-</div>
-</div>
+    </div>
 </template>
 
 <script>
-
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-    name: 'signup',
+    name: "Signup",
     data() {
         return {
             form: {
-                email: '',
-                sdt: '',
-                password: '',
-                confirm: ''
-            }
+                username: "",  
+                email: "",
+                phone: "",
+                password: "",
+                password2: ""
+            },
+            errorMessage: "",
         };
     },
     methods: {
         async signup() {
-            console.log("Dữ liệu gửi đi:", this.form);
+            // Kiểm tra mật khẩu nhập lại có trùng không
+            if (this.form.password !== this.form.password2) {
+                this.errorMessage = "Mật khẩu không khớp!";
+                return;
+            }
 
-            let userItem = {
-                email: this.form.email,
-                sdt: this.form.sdt,
-                password: this.form.password,
-                confirm: this.form.confirm
-            };
+            // Kiểm tra các trường không được để trống
+            if (!this.form.email || !this.form.password || !this.form.password2 || !this.form.phone) {
+                this.errorMessage = "Vui lòng nhập đầy đủ thông tin!";
+                return;
+            }
 
             try {
-                let result = await axios.post('http://localhost:3001/users', userItem);
-                console.log("Kết quả API:", result.data);
+                const csrfToken = this.getCookie("csrftoken");
 
-                // Reset form sau khi đăng ký thành công
-                this.form = {
-                    email: '',
-                    sdt: '',
-                    password: '',
-                    confirm: ''
-                };
+                // Nếu username rỗng, tự động tạo từ email
+                if (!this.form.username) {
+                    this.form.username = this.form.email.split("@")[0];
+                }
 
-                alert("Đăng ký thành công!");
+                const response = await axios.post(
+                    "http://127.0.0.1:8000/api/users/register/",
+                    this.form,
+                    {
+                        headers: {
+                            "X-CSRFToken": csrfToken,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+
+                if (response.status === 201) {
+                    alert("Đăng ký thành công! Hệ thống sẽ tự động đăng nhập.");
+
+                    // Lưu token vào localStorage nếu có
+                    if (response.data.access) {
+                        localStorage.setItem("access_token", response.data.access);
+                        localStorage.setItem("refresh_token", response.data.refresh);
+                    }
+
+                    // Chuyển hướng sang trang chủ hoặc đăng nhập
+                    this.$router.push("/");
+                }
             } catch (error) {
-                console.error("Lỗi khi gửi API:", error);
-                alert("Có lỗi xảy ra, vui lòng thử lại!");
+                console.error(error.response);
+                this.errorMessage = error.response?.data?.error || "Có lỗi xảy ra!";
             }
+        },
+
+        getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
         }
     }
 };
 </script>
-
-
 
 <style>
 
@@ -115,7 +134,7 @@ export default {
     display: grid;
     margin-top: 200px;
     margin-left: 100px;
-    background-color: RGB(255, 237, 237);
+    background-color: RGB(231, 218, 202);
     border: solid 2px black;
     border-radius: 20px;
     padding: 20px;
@@ -134,7 +153,7 @@ h1 {
 }
 
 .container {
-    background-color: RGB(255, 237, 237);
+    background-color: RGB(231, 218, 202);
     width: 600px;
     height: 400px;
     position: relative;
@@ -167,6 +186,7 @@ h1 {
     border: solid 1px black;
     flex: 1;
     border-radius: 30px;
+    padding: 0 16px;
   
     
 }
@@ -194,11 +214,16 @@ h1 {
 }
 
 button.gui {
+   
+
     padding: 8px 16px;
     border-radius: 5px;
-    background-color: RGB(255, 195, 213);
-    border: 1px solid RGB(255, 195, 213);
+    background-color: RGB(167, 110, 67);
+    border: 1px solid RGB(167, 110, 67);
     margin-top: 5px;
+    display: flex;
+    color: white;
+    margin: 0 auto;
 }
 
 

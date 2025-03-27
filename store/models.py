@@ -58,8 +58,12 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="carts")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def total_price(self):
+        return sum(item.product.price * item.quantity for item in self.items.all())
+
     def __str__(self):
         return f"Cart {self.id} - {self.user.username}"
+
     
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
